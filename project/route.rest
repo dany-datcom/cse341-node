@@ -1,10 +1,10 @@
-### GET all contacts
+### GET all contacts (LOCAL)
 GET http://localhost:3000/contacts
 
-### GET contact by ID
+### GET contact by ID (LOCAL)
 GET http://localhost:3000/contacts/PUT_ID_HERE
 
-### CREATE contact
+### CREATE contact (LOCAL)
 POST http://localhost:3000/contacts
 Content-Type: application/json
 
@@ -16,7 +16,7 @@ Content-Type: application/json
   "birthday": "2000-01-01"
 }
 
-### UPDATE contact
+### UPDATE contact (LOCAL)
 PUT http://localhost:3000/contacts/PUT_ID_HERE
 Content-Type: application/json
 
@@ -28,5 +28,43 @@ Content-Type: application/json
   "birthday": "2000-01-01"
 }
 
-### DELETE contact
+### DELETE contact (LOCAL)
 DELETE http://localhost:3000/contacts/PUT_ID_HERE
+
+
+### =========================
+### RENDER VERSION (REQUIRED)
+### =========================
+
+### GET all contacts (RENDER)
+GET https://cse341-node-gun5.onrender.com/contacts
+
+### GET contact by ID (RENDER)
+GET https://cse341-node-gun5.onrender.com/contacts/PUT_ID_HERE
+
+### CREATE contact (RENDER)
+POST https://cse341-node-gun5.onrender.com/contacts
+Content-Type: application/json
+
+{
+  "firstName": "Dany",
+  "lastName": "Jimenez",
+  "email": "dany@email.com",
+  "favoriteColor": "Blue",
+  "birthday": "2000-01-01"
+}
+
+### UPDATE contact (RENDER)
+PUT https://cse341-node-gun5.onrender.com/contacts/PUT_ID_HERE
+Content-Type: application/json
+
+{
+  "firstName": "Dany Updated",
+  "lastName": "Jimenez",
+  "email": "updated@email.com",
+  "favoriteColor": "Black",
+  "birthday": "2000-01-01"
+}
+
+### DELETE contact (RENDER)
+DELETE https://cse341-node-gun5.onrender.com/contacts/PUT_ID_HERE
