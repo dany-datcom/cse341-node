@@ -6,9 +6,7 @@
     "description": "API for managing contacts"
   },
   "servers": [
-    /*{
-      "url": "http://localhost:3000"
-    },*/
+
     {
       "url": "https://cse341-node-gun5.onrender.com"
     }
