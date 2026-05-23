@@ -103,7 +103,16 @@ const updateReview = async (req, res) => {
             .collection('reviews')
             .replaceOne({ _id: reviewId }, review);
 
-        res.status(204).send();
+        if (response.modifiedCount > 0) {
+
+            res.status(204).send();
+
+        } else {
+
+            res.status(404).json({
+                message: 'Review not found'
+            });
+        }
 
     } catch (err) {
 
@@ -124,7 +133,16 @@ const deleteReview = async (req, res) => {
             .collection('reviews')
             .deleteOne({ _id: reviewId });
 
-        res.status(200).send();
+        if (response.deletedCount > 0) {
+
+            res.status(200).send();
+
+        } else {
+
+            res.status(404).json({
+                message: 'Review not found'
+            });
+        }
 
     } catch (err) {
 
