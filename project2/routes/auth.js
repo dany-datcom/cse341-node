@@ -10,7 +10,7 @@ router.get('/github/callback',
         session: true
     }),
     (req, res) => {
-        res.redirect('/');
+        res.redirect('/api-docs');
     }
 );
 
