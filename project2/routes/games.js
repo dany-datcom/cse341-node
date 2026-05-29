@@ -1,16 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
+const auth = require('../middleware/authenticate');
+
 const gamesController = require('../controllers/games');
 
-router.get('/', gamesController.getAll);
+router.get('/', auth.isAuthenticated, gamesController.getAll);
 
-router.get('/:id', gamesController.getSingle);
+router.get('/:id', auth.isAuthenticated, gamesController.getSingle);
 
-router.post('/', gamesController.createGame);
+router.post('/', auth.isAuthenticated, gamesController.createGame);
 
-router.put('/:id', gamesController.updateGame);
+router.put('/:id', auth.isAuthenticated, gamesController.updateGame);
 
-router.delete('/:id', gamesController.deleteGame);
+router.delete('/:id', auth.isAuthenticated, gamesController.deleteGame);
 
 module.exports = router;
