@@ -1,0 +1,47 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TaskFlow API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Get all users"
+      },
+      "post": {
+        "summary": "Create user"
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Get user by id"
+      },
+      "put": {
+        "summary": "Update user"
+      },
+      "delete": {
+        "summary": "Delete user"
+      }
+    },
+    "/projects": {
+      "get": {
+        "summary": "Get all projects"
+      },
+      "post": {
+        "summary": "Create project"
+      }
+    },
+    "/projects/{id}": {
+      "get": {
+        "summary": "Get project by id"
+      },
+      "put": {
+        "summary": "Update project"
+      },
+      "delete": {
+        "summary": "Delete project"
+      }
+    }
+  }
+}
