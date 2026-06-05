@@ -1,63 +1,128 @@
-const user = require("../models/user");
+const userModel = require("../models/user");
 
 const getAllusers = async (req, res) => {
   try {
-    const users = await user.collection().find().toArray();
+    const users = await userModel.collection().find().toArray();
 
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({
+      message: error.message
+    });
   }
 };
 
 const getuserById = async (req, res) => {
   try {
-    const user = await user.collection().findOne({
-      _id: new user.ObjectId(req.params.id)
-    });
+    const id = req.params.id;
 
-    if (!user) {
-      return res.status(404).json({ message: "user not found" });
+    if (!userModel.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid ID format"
+      });
     }
 
-    res.status(200).json(user);
-  } catch {
-    res.status(400).json({ message: "Invalid ID" });
+    const foundUser = await userModel.collection().findOne({
+      _id: new userModel.ObjectId(id)
+    });
+
+    if (!foundUser) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json(foundUser);
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: error.message
+    });
   }
 };
 
 const createuser = async (req, res) => {
   try {
-    const result = await user.collection().insertOne(req.body);
+    const result = await userModel.collection().insertOne(req.body);
 
-    res.status(201).json(result);
-  } catch {
-    res.status(500).json({ message: "Error creating user" });
+    res.status(201).json({
+      message: "User created successfully",
+      insertedId: result.insertedId
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
   }
 };
 
 const updateuser = async (req, res) => {
   try {
-    const result = await user.collection().updateOne(
-      { _id: new user.ObjectId(req.params.id) },
-      { $set: req.body }
+    const id = req.params.id;
+
+    if (!userModel.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid ID format"
+      });
+    }
+
+    const result = await userModel.collection().updateOne(
+      {
+        _id: new userModel.ObjectId(id)
+      },
+      {
+        $set: req.body
+      }
     );
 
-    res.status(200).json(result);
-  } catch {
-    res.status(400).json({ message: "Invalid ID" });
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      message: "User updated successfully"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
   }
 };
 
 const deleteuser = async (req, res) => {
   try {
-    const result = await user.collection().deleteOne({
-      _id: new user.ObjectId(req.params.id)
+    const id = req.params.id;
+
+    if (!userModel.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid ID format"
+      });
+    }
+
+    const result = await userModel.collection().deleteOne({
+      _id: new userModel.ObjectId(id)
     });
 
-    res.status(200).json(result);
-  } catch {
-    res.status(400).json({ message: "Invalid ID" });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      message: "User deleted successfully"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
   }
 };
 
