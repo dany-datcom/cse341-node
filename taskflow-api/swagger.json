@@ -2,45 +2,291 @@
   "openapi": "3.0.0",
   "info": {
     "title": "TaskFlow API",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "TaskFlow API for managing users and projects"
   },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
   "paths": {
     "/users": {
       "get": {
-        "summary": "Get all users"
+        "summary": "Get all users",
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       },
       "post": {
-        "summary": "Create user"
+        "summary": "Create a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       }
     },
     "/users/{id}": {
       "get": {
-        "summary": "Get user by id"
+        "summary": "Get user by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       },
       "put": {
-        "summary": "Update user"
+        "summary": "Update user by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
       },
       "delete": {
-        "summary": "Delete user"
+        "summary": "Delete user by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
       }
     },
     "/projects": {
       "get": {
-        "summary": "Get all projects"
+        "summary": "Get all projects",
+        "responses": {
+          "200": {
+            "description": "Projects retrieved successfully"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       },
       "post": {
-        "summary": "Create project"
+        "summary": "Create a new project",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Project"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Project created successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       }
     },
     "/projects/{id}": {
       "get": {
-        "summary": "Get project by id"
+        "summary": "Get project by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project found"
+          },
+          "404": {
+            "description": "Project not found"
+          }
+        }
       },
       "put": {
-        "summary": "Update project"
+        "summary": "Update project by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Project"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Project updated successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Project not found"
+          }
+        }
       },
       "delete": {
-        "summary": "Delete project"
+        "summary": "Delete project by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project deleted successfully"
+          },
+          "404": {
+            "description": "Project not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": [
+          "name",
+          "email"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Dany Jimenez"
+          },
+          "email": {
+            "type": "string",
+            "example": "dany@email.com"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin"
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "TaskFlow API"
+          },
+          "description": {
+            "type": "string",
+            "example": "Final project for CSE 341"
+          },
+          "status": {
+            "type": "string",
+            "example": "In Progress"
+          }
+        }
       }
     }
   }
