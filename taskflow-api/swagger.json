@@ -243,17 +243,17 @@
           }
         }
       }
-    }
-  },
-"/tasks": {
-  "get": {
-    "summary": "Get all tasks",
-    "responses": {
-      "200": {
-        "description": "Tasks retrieved successfully"
-      },
-      "500": {
-        "description": "Server error"
+    },
+  "/tasks": {
+    "get": {
+      "summary": "Get all tasks",
+      "responses": {
+        "200": {
+          "description": "Tasks retrieved successfully"
+        },
+        "500": {
+          "description": "Server error"
+        }
       }
     }
   },
