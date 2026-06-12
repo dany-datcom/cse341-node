@@ -3,7 +3,7 @@
   "info": {
     "title": "TaskFlow API",
     "version": "1.0.0",
-    "description": "TaskFlow API for managing users and projects"
+    "description": "TaskFlow API for managing users, projects, tasks and teams"
   },
   "servers": [
     {
@@ -11,15 +11,33 @@
     }
   ],
   "paths": {
+    "/auth/github": {
+      "get": {
+        "summary": "Login with GitHub",
+        "responses": {
+          "302": {
+            "description": "Redirects user to GitHub authentication"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "summary": "Logout current user",
+        "responses": {
+          "200": {
+            "description": "User logged out successfully"
+          }
+        }
+      }
+    },
+
     "/users": {
       "get": {
         "summary": "Get all users",
         "responses": {
           "200": {
             "description": "Users retrieved successfully"
-          },
-          "500": {
-            "description": "Server error"
           }
         }
       },
@@ -40,14 +58,12 @@
             "description": "User created successfully"
           },
           "400": {
-            "description": "Invalid input"
-          },
-          "500": {
-            "description": "Server error"
+            "description": "Validation error"
           }
         }
       }
     },
+
     "/users/{id}": {
       "get": {
         "summary": "Get user by ID",
@@ -67,14 +83,11 @@
           },
           "404": {
             "description": "User not found"
-          },
-          "500": {
-            "description": "Server error"
           }
         }
       },
       "put": {
-        "summary": "Update user by ID",
+        "summary": "Update user",
         "parameters": [
           {
             "name": "id",
@@ -98,17 +111,11 @@
         "responses": {
           "200": {
             "description": "User updated successfully"
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "404": {
-            "description": "User not found"
           }
         }
       },
       "delete": {
-        "summary": "Delete user by ID",
+        "summary": "Delete user",
         "parameters": [
           {
             "name": "id",
@@ -122,27 +129,22 @@
         "responses": {
           "200": {
             "description": "User deleted successfully"
-          },
-          "404": {
-            "description": "User not found"
           }
         }
       }
     },
+
     "/projects": {
       "get": {
         "summary": "Get all projects",
         "responses": {
           "200": {
             "description": "Projects retrieved successfully"
-          },
-          "500": {
-            "description": "Server error"
           }
         }
       },
       "post": {
-        "summary": "Create a new project",
+        "summary": "Create project",
         "requestBody": {
           "required": true,
           "content": {
@@ -156,16 +158,11 @@
         "responses": {
           "201": {
             "description": "Project created successfully"
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "500": {
-            "description": "Server error"
           }
         }
       }
     },
+
     "/projects/{id}": {
       "get": {
         "summary": "Get project by ID",
@@ -182,14 +179,11 @@
         "responses": {
           "200": {
             "description": "Project found"
-          },
-          "404": {
-            "description": "Project not found"
           }
         }
       },
       "put": {
-        "summary": "Update project by ID",
+        "summary": "Update project",
         "parameters": [
           {
             "name": "id",
@@ -213,17 +207,11 @@
         "responses": {
           "200": {
             "description": "Project updated successfully"
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "404": {
-            "description": "Project not found"
           }
         }
       },
       "delete": {
-        "summary": "Delete project by ID",
+        "summary": "Delete project",
         "parameters": [
           {
             "name": "id",
@@ -237,220 +225,209 @@
         "responses": {
           "200": {
             "description": "Project deleted successfully"
-          },
-          "404": {
-            "description": "Project not found"
           }
         }
       }
     },
-  "/tasks": {
-    "get": {
-      "summary": "Get all tasks",
-      "responses": {
-        "200": {
-          "description": "Tasks retrieved successfully"
+
+    "/tasks": {
+      "get": {
+        "summary": "Get all tasks",
+        "responses": {
+          "200": {
+            "description": "Tasks retrieved successfully"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create task",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          }
         },
-        "500": {
-          "description": "Server error"
-        }
-      }
-    }
-  },
-  "post": {
-    "summary": "Create a new task",
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/Task"
+        "responses": {
+          "201": {
+            "description": "Task created successfully"
           }
         }
       }
     },
-    "responses": {
-      "201": {
-        "description": "Task created successfully"
+
+    "/tasks/{id}": {
+      "get": {
+        "summary": "Get task by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task found"
+          }
+        }
       },
-      "400": {
-        "description": "Invalid input"
-      }
-    }
-  }
-},
-"/tasks/{id}": {
-  "get": {
-    "summary": "Get task by ID",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
+      "put": {
+        "summary": "Update task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task updated successfully"
+          }
         }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Task found"
       },
-      "404": {
-        "description": "Task not found"
-      }
-    }
-  },
-  "put": {
-    "summary": "Update task by ID",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/Task"
+      "delete": {
+        "summary": "Delete task",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task deleted successfully"
           }
         }
       }
     },
-    "responses": {
-      "200": {
-        "description": "Task updated successfully"
-      }
-    }
-  },
-  "delete": {
-    "summary": "Delete task by ID",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
+
+    "/teams": {
+      "get": {
+        "summary": "Get all teams",
+        "responses": {
+          "200": {
+            "description": "Teams retrieved successfully"
+          }
         }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Task deleted successfully"
-      }
-    }
-  }
-},
-"/teams": {
-  "get": {
-    "summary": "Get all teams",
-    "responses": {
-      "200": {
-        "description": "Teams retrieved successfully"
-      }
-    }
-  },
-  "post": {
-    "summary": "Create a new team",
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/Team"
+      },
+      "post": {
+        "summary": "Create team",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Team"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Team created successfully"
           }
         }
       }
     },
-    "responses": {
-      "201": {
-        "description": "Team created successfully"
-      }
-    }
-  }
-},
-"/teams/{id}": {
-  "get": {
-    "summary": "Get team by ID",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
+
+    "/teams/{id}": {
+      "get": {
+        "summary": "Get team by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Team found"
+          }
         }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Team found"
-      }
-    }
-  },
-  "put": {
-    "summary": "Update team by ID",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
+      },
+      "put": {
+        "summary": "Update team",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Team"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Team updated successfully"
+          }
         }
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/Team"
+      },
+      "delete": {
+        "summary": "Delete team",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Team deleted successfully"
           }
         }
       }
-    },
-    "responses": {
-      "200": {
-        "description": "Team updated successfully"
-      }
     }
   },
-  "delete": {
-    "summary": "Delete team by ID",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Team deleted successfully"
-      }
-    }
-  }
-},
 
   "components": {
     "schemas": {
       "User": {
         "type": "object",
-        "required": [
-          "name",
-          "email"
-        ],
+        "required": ["name", "email", "role"],
         "properties": {
           "name": {
             "type": "string",
@@ -466,11 +443,10 @@
           }
         }
       },
+
       "Project": {
         "type": "object",
-        "required": [
-          "title"
-        ],
+        "required": ["title", "description", "status"],
         "properties": {
           "title": {
             "type": "string",
@@ -478,30 +454,7 @@
           },
           "description": {
             "type": "string",
-            "example": "Final project for CSE 341"
-          },
-          "status": {
-            "type": "string",
-            "example": "In Progress"
-          }
-        }
-      }
-      ,
-      "Task": {
-        "type": "object",
-        "required": [
-          "title",
-          "description",
-          "status"
-        ],
-        "properties": {
-          "title": {
-            "type": "string",
-            "example": "Create API Routes"
-          },
-          "description": {
-            "type": "string",
-            "example": "Build CRUD endpoints for tasks"
+            "example": "Final project for CSE341"
           },
           "status": {
             "type": "string",
@@ -509,11 +462,29 @@
           }
         }
       },
+
+      "Task": {
+        "type": "object",
+        "required": ["title", "description", "status"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Build CRUD endpoints"
+          },
+          "description": {
+            "type": "string",
+            "example": "Implement GET POST PUT DELETE routes"
+          },
+          "status": {
+            "type": "string",
+            "example": "In Progress"
+          }
+        }
+      },
+
       "Team": {
         "type": "object",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "properties": {
           "name": {
             "type": "string",
@@ -521,7 +492,6 @@
           }
         }
       }
-
     }
   }
 }
