@@ -1,18 +1,34 @@
 const express = require("express");
+const session = require("express-session");
 const swaggerUi = require("swagger-ui-express");
 
-const swaggerDocument = require("./swagger.json");
-
-const { connectDB } = require("./database/connect");
-
 require("dotenv").config();
+
+const passport = require("./config/passport");
+const swaggerDocument = require("./swagger.json");
+const { connectDB } = require("./database/connect");
 
 const app = express();
 
 app.use(express.json());
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/auth", require("./routes/auth"));
+
 app.use("/users", require("./routes/users"));
 app.use("/projects", require("./routes/projects"));
+app.use("/tasks", require("./routes/tasks"));
+app.use("/teams", require("./routes/teams"));
 
 app.use(
   "/api-docs",
@@ -21,11 +37,19 @@ app.use(
 );
 
 const startServer = async () => {
-  await connectDB();
+  try {
+    await connectDB();
 
-  app.listen(process.env.PORT || 8080, () => {
-    console.log("Server Running");
-  });
+    app.listen(process.env.PORT || 8080, () => {
+      console.log("Server Running");
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = app;

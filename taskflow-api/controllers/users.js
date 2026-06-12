@@ -45,7 +45,36 @@ const getuserById = async (req, res) => {
 
 const createuser = async (req, res) => {
   try {
-    const result = await userModel.collection().insertOne(req.body);
+
+    const { name, email, role } = req.body;
+
+    if (!name || !email || !role) {
+      return res.status(400).json({
+        message: "name, email and role are required"
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        message: "Invalid email format"
+      });
+    }
+
+    const validRoles = ["admin", "guest"];
+
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({
+        message: "Role must be admin or guest"
+      });
+    }
+
+    const result = await userModel.collection().insertOne({
+      name,
+      email,
+      role
+    });
 
     res.status(201).json({
       message: "User created successfully",
@@ -61,6 +90,7 @@ const createuser = async (req, res) => {
 
 const updateuser = async (req, res) => {
   try {
+
     const id = req.params.id;
 
     if (!userModel.ObjectId.isValid(id)) {
@@ -69,12 +99,40 @@ const updateuser = async (req, res) => {
       });
     }
 
+    const { name, email, role } = req.body;
+
+    if (!name || !email || !role) {
+      return res.status(400).json({
+        message: "name, email and role are required"
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        message: "Invalid email format"
+      });
+    }
+
+    const validRoles = ["admin", "guest"];
+
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({
+        message: "Role must be admin or guest"
+      });
+    }
+
     const result = await userModel.collection().updateOne(
       {
         _id: new userModel.ObjectId(id)
       },
       {
-        $set: req.body
+        $set: {
+          name,
+          email,
+          role
+        }
       }
     );
 

@@ -46,7 +46,32 @@ const getprojectById = async (req, res) => {
 
 const createproject = async (req, res) => {
   try {
-    const result = await projectModel.collection().insertOne(req.body);
+
+    const { title, description, status } = req.body;
+
+    if (!title || !description || !status) {
+      return res.status(400).json({
+        message: "title, description and status are required"
+      });
+    }
+
+    const validStatus = [
+      "Not Started",
+      "In Progress",
+      "Completed"
+    ];
+
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+        message: "Status must be Not Started, In Progress or Completed"
+      });
+    }
+
+    const result = await projectModel.collection().insertOne({
+      title,
+      description,
+      status
+    });
 
     res.status(201).json({
       message: "Project created successfully",
@@ -62,6 +87,7 @@ const createproject = async (req, res) => {
 
 const updateproject = async (req, res) => {
   try {
+
     const id = req.params.id;
 
     if (!projectModel.ObjectId.isValid(id)) {
@@ -70,12 +96,36 @@ const updateproject = async (req, res) => {
       });
     }
 
+    const { title, description, status } = req.body;
+
+    if (!title || !description || !status) {
+      return res.status(400).json({
+        message: "title, description and status are required"
+      });
+    }
+
+    const validStatus = [
+      "Not Started",
+      "In Progress",
+      "Completed"
+    ];
+
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+        message: "Status must be Not Started, In Progress or Completed"
+      });
+    }
+
     const result = await projectModel.collection().updateOne(
       {
         _id: new projectModel.ObjectId(id)
       },
       {
-        $set: req.body
+        $set: {
+          title,
+          description,
+          status
+        }
       }
     );
 

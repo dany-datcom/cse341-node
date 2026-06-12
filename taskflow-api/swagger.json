@@ -245,6 +245,204 @@
       }
     }
   },
+"/tasks": {
+  "get": {
+    "summary": "Get all tasks",
+    "responses": {
+      "200": {
+        "description": "Tasks retrieved successfully"
+      },
+      "500": {
+        "description": "Server error"
+      }
+    }
+  },
+  "post": {
+    "summary": "Create a new task",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Task"
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Task created successfully"
+      },
+      "400": {
+        "description": "Invalid input"
+      }
+    }
+  }
+},
+"/tasks/{id}": {
+  "get": {
+    "summary": "Get task by ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Task found"
+      },
+      "404": {
+        "description": "Task not found"
+      }
+    }
+  },
+  "put": {
+    "summary": "Update task by ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Task"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Task updated successfully"
+      }
+    }
+  },
+  "delete": {
+    "summary": "Delete task by ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Task deleted successfully"
+      }
+    }
+  }
+},
+"/teams": {
+  "get": {
+    "summary": "Get all teams",
+    "responses": {
+      "200": {
+        "description": "Teams retrieved successfully"
+      }
+    }
+  },
+  "post": {
+    "summary": "Create a new team",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Team"
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Team created successfully"
+      }
+    }
+  }
+},
+"/teams/{id}": {
+  "get": {
+    "summary": "Get team by ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Team found"
+      }
+    }
+  },
+  "put": {
+    "summary": "Update team by ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Team"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Team updated successfully"
+      }
+    }
+  },
+  "delete": {
+    "summary": "Delete team by ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Team deleted successfully"
+      }
+    }
+  }
+},
+
   "components": {
     "schemas": {
       "User": {
@@ -288,6 +486,42 @@
           }
         }
       }
+      ,
+      "Task": {
+        "type": "object",
+        "required": [
+          "title",
+          "description",
+          "status"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Create API Routes"
+          },
+          "description": {
+            "type": "string",
+            "example": "Build CRUD endpoints for tasks"
+          },
+          "status": {
+            "type": "string",
+            "example": "In Progress"
+          }
+        }
+      },
+      "Team": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Development Team"
+          }
+        }
+      }
+
     }
   }
 }
