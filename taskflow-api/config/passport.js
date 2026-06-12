@@ -1,3 +1,7 @@
+console.log("Passport config loaded");
+console.log("CLIENT:", process.env.GITHUB_CLIENT_ID);
+console.log("CALLBACK:", process.env.CALLBACK_URL);
+
 const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
 
