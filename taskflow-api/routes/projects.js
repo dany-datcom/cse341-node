@@ -20,6 +20,10 @@ router.put(
   projects.updateproject
 );
 
-router.delete("/:id", projects.deleteproject);
+router.delete(
+  "/:id",
+  isAuthenticated,
+  projects.deleteproject
+);
 
 module.exports = router;

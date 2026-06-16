@@ -20,8 +20,10 @@ router.put(
   users.updateuser
 );
 
-router.delete("/:id", users.deleteuser);
+router.delete(
+  "/:id",
+  isAuthenticated,
+  users.deleteuser
+);
 
 module.exports = router;
-
-//dan

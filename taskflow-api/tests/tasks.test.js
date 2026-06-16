@@ -13,3 +13,11 @@ describe("GET /tasks", () => {
   });
 
 });
+
+test("should return an array", async () => {
+
+  const response = await request(app)
+    .get("/tasks");
+
+  expect(Array.isArray(response.body)).toBe(true);
+});

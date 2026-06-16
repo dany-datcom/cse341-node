@@ -31,7 +31,6 @@
         }
       }
     },
-
     "/users": {
       "get": {
         "summary": "Get all users",
@@ -63,7 +62,6 @@
         }
       }
     },
-
     "/users/{id}": {
       "get": {
         "summary": "Get user by ID",
@@ -133,7 +131,6 @@
         }
       }
     },
-
     "/projects": {
       "get": {
         "summary": "Get all projects",
@@ -162,7 +159,6 @@
         }
       }
     },
-
     "/projects/{id}": {
       "get": {
         "summary": "Get project by ID",
@@ -229,7 +225,6 @@
         }
       }
     },
-
     "/tasks": {
       "get": {
         "summary": "Get all tasks",
@@ -258,7 +253,6 @@
         }
       }
     },
-
     "/tasks/{id}": {
       "get": {
         "summary": "Get task by ID",
@@ -325,7 +319,6 @@
         }
       }
     },
-
     "/teams": {
       "get": {
         "summary": "Get all teams",
@@ -354,7 +347,6 @@
         }
       }
     },
-
     "/teams/{id}": {
       "get": {
         "summary": "Get team by ID",
@@ -422,74 +414,126 @@
       }
     }
   },
-
   "components": {
+    "securitySchemes": {
+      "githubAuth": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://github.com/login/oauth/authorize",
+            "tokenUrl": "https://github.com/login/oauth/access_token",
+            "scopes": {}
+          }
+        }
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
-        "required": ["name", "email", "role"],
+        "required": [
+          "name",
+          "email",
+          "role",
+          "phone",
+          "department",
+          "status",
+          "joinDate"
+        ],
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "Dany Jimenez"
-          },
-          "email": {
-            "type": "string",
-            "example": "dany@email.com"
-          },
+          "name": { "type": "string", "example": "Dany Jimenez" },
+          "email": { "type": "string", "example": "dany@email.com" },
           "role": {
             "type": "string",
+            "enum": ["admin", "manager", "member", "guest"],
             "example": "admin"
-          }
+          },
+          "phone": { "type": "string", "example": "88888888" },
+          "department": { "type": "string", "example": "IT" },
+          "status": {
+            "type": "string",
+            "enum": ["Active", "Inactive"],
+            "example": "Active"
+          },
+          "joinDate": { "type": "string", "format": "date", "example": "2026-06-15" }
         }
       },
-
       "Project": {
         "type": "object",
-        "required": ["title", "description", "status"],
+        "required": [
+          "title",
+          "description",
+          "status",
+          "startDate",
+          "endDate",
+          "owner",
+          "budget"
+        ],
         "properties": {
-          "title": {
-            "type": "string",
-            "example": "TaskFlow API"
-          },
-          "description": {
-            "type": "string",
-            "example": "Final project for CSE341"
-          },
+          "title": { "type": "string", "example": "TaskFlow API" },
+          "description": { "type": "string", "example": "Final project for CSE 341" },
           "status": {
             "type": "string",
+            "enum": ["Not Started", "In Progress", "Completed"],
             "example": "In Progress"
-          }
+          },
+          "startDate": { "type": "string", "format": "date", "example": "2026-06-01" },
+          "endDate": { "type": "string", "format": "date", "example": "2026-07-01" },
+          "owner": { "type": "string", "example": "Dany Jimenez" },
+          "budget": { "type": "number", "example": 5000 }
         }
       },
-
       "Task": {
         "type": "object",
-        "required": ["title", "description", "status"],
+        "required": [
+          "title",
+          "description",
+          "status",
+          "priority",
+          "assignedTo",
+          "dueDate",
+          "projectId"
+        ],
         "properties": {
-          "title": {
-            "type": "string",
-            "example": "Build CRUD endpoints"
-          },
-          "description": {
-            "type": "string",
-            "example": "Implement GET POST PUT DELETE routes"
-          },
+          "title": { "type": "string", "example": "Build CRUD endpoints" },
+          "description": { "type": "string", "example": "Implement GET POST PUT DELETE routes" },
           "status": {
             "type": "string",
+            "enum": ["Not Started", "In Progress", "Completed"],
             "example": "In Progress"
-          }
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"],
+            "example": "High"
+          },
+          "assignedTo": { "type": "string", "example": "Dany Jimenez" },
+          "dueDate": { "type": "string", "format": "date", "example": "2026-06-30" },
+          "projectId": { "type": "string", "example": "684f7c5d2e123456789abcd1" }
         }
       },
-
       "Team": {
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name",
+          "description",
+          "teamLead",
+          "memberCount",
+          "department",
+          "status",
+          "createdDate"
+        ],
         "properties": {
-          "name": {
+          "name": { "type": "string", "example": "Development Team" },
+          "description": { "type": "string", "example": "Main software development team" },
+          "teamLead": { "type": "string", "example": "Dany Jimenez" },
+          "memberCount": { "type": "integer", "example": 5 },
+          "department": { "type": "string", "example": "Engineering" },
+          "status": {
             "type": "string",
-            "example": "Development Team"
-          }
+            "enum": ["Active", "Inactive"],
+            "example": "Active"
+          },
+          "createdDate": { "type": "string", "format": "date", "example": "2026-06-15" }
         }
       }
     }

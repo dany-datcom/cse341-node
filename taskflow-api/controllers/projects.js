@@ -1,5 +1,11 @@
 const projectModel = require("../models/project");
 
+const validStatus = [
+  "Not Started",
+  "In Progress",
+  "Completed"
+];
+
 const getAllprojects = async (req, res) => {
   try {
     const projects = await projectModel.collection().find().toArray();
@@ -36,8 +42,6 @@ const getprojectById = async (req, res) => {
     res.status(200).json(foundProject);
 
   } catch (error) {
-    console.error(error);
-
     res.status(500).json({
       message: error.message
     });
@@ -47,19 +51,29 @@ const getprojectById = async (req, res) => {
 const createproject = async (req, res) => {
   try {
 
-    const { title, description, status } = req.body;
+    const {
+      title,
+      description,
+      status,
+      startDate,
+      endDate,
+      owner,
+      budget
+    } = req.body;
 
-    if (!title || !description || !status) {
+    if (
+      !title ||
+      !description ||
+      !status ||
+      !startDate ||
+      !endDate ||
+      !owner ||
+      budget === undefined
+    ) {
       return res.status(400).json({
-        message: "title, description and status are required"
+        message: "All project fields are required"
       });
     }
-
-    const validStatus = [
-      "Not Started",
-      "In Progress",
-      "Completed"
-    ];
 
     if (!validStatus.includes(status)) {
       return res.status(400).json({
@@ -70,7 +84,11 @@ const createproject = async (req, res) => {
     const result = await projectModel.collection().insertOne({
       title,
       description,
-      status
+      status,
+      startDate,
+      endDate,
+      owner,
+      budget
     });
 
     res.status(201).json({
@@ -96,19 +114,29 @@ const updateproject = async (req, res) => {
       });
     }
 
-    const { title, description, status } = req.body;
+    const {
+      title,
+      description,
+      status,
+      startDate,
+      endDate,
+      owner,
+      budget
+    } = req.body;
 
-    if (!title || !description || !status) {
+    if (
+      !title ||
+      !description ||
+      !status ||
+      !startDate ||
+      !endDate ||
+      !owner ||
+      budget === undefined
+    ) {
       return res.status(400).json({
-        message: "title, description and status are required"
+        message: "All project fields are required"
       });
     }
-
-    const validStatus = [
-      "Not Started",
-      "In Progress",
-      "Completed"
-    ];
 
     if (!validStatus.includes(status)) {
       return res.status(400).json({
@@ -124,7 +152,11 @@ const updateproject = async (req, res) => {
         $set: {
           title,
           description,
-          status
+          status,
+          startDate,
+          endDate,
+          owner,
+          budget
         }
       }
     );
@@ -148,6 +180,7 @@ const updateproject = async (req, res) => {
 
 const deleteproject = async (req, res) => {
   try {
+
     const id = req.params.id;
 
     if (!projectModel.ObjectId.isValid(id)) {

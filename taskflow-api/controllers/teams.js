@@ -1,5 +1,10 @@
 const teamModel = require("../models/team");
 
+const validStatus = [
+  "Active",
+  "Inactive"
+];
+
 const getAllteams = async (req, res) => {
   try {
     const teams = await teamModel.collection().find().toArray();
@@ -46,15 +51,45 @@ const getteamById = async (req, res) => {
 const createteam = async (req, res) => {
   try {
 
-    const { name } = req.body;
+    const {
+      name,
+      description,
+      teamLead,
+      memberCount,
+      department,
+      status,
+      createdDate
+    } = req.body;
 
-    if (!name) {
+    if (
+      !name ||
+      !description ||
+      !teamLead ||
+      memberCount === undefined ||
+      !department ||
+      !status ||
+      !createdDate
+    ) {
       return res.status(400).json({
-        message: "name is required"
+        message: "All team fields are required"
       });
     }
 
-    const result = await teamModel.collection().insertOne(req.body);
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+        message: "Status must be Active or Inactive"
+      });
+    }
+
+    const result = await teamModel.collection().insertOne({
+      name,
+      description,
+      teamLead,
+      memberCount,
+      department,
+      status,
+      createdDate
+    });
 
     res.status(201).json({
       message: "Team created successfully",
@@ -79,12 +114,50 @@ const updateteam = async (req, res) => {
       });
     }
 
+    const {
+      name,
+      description,
+      teamLead,
+      memberCount,
+      department,
+      status,
+      createdDate
+    } = req.body;
+
+    if (
+      !name ||
+      !description ||
+      !teamLead ||
+      memberCount === undefined ||
+      !department ||
+      !status ||
+      !createdDate
+    ) {
+      return res.status(400).json({
+        message: "All team fields are required"
+      });
+    }
+
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+        message: "Status must be Active or Inactive"
+      });
+    }
+
     const result = await teamModel.collection().updateOne(
       {
         _id: new teamModel.ObjectId(id)
       },
       {
-        $set: req.body
+        $set: {
+          name,
+          description,
+          teamLead,
+          memberCount,
+          department,
+          status,
+          createdDate
+        }
       }
     );
 

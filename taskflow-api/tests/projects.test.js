@@ -13,3 +13,11 @@ describe("GET /projects", () => {
   });
 
 });
+
+test("should return an array", async () => {
+
+  const response = await request(app)
+    .get("/projects");
+
+  expect(Array.isArray(response.body)).toBe(true);
+});

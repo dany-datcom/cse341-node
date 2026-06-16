@@ -1,5 +1,17 @@
 const userModel = require("../models/user");
 
+const validRoles = [
+  "admin",
+  "manager",
+  "member",
+  "guest"
+];
+
+const validStatus = [
+  "Active",
+  "Inactive"
+];
+
 const getAllusers = async (req, res) => {
   try {
     const users = await userModel.collection().find().toArray();
@@ -35,8 +47,6 @@ const getuserById = async (req, res) => {
     res.status(200).json(foundUser);
 
   } catch (error) {
-    console.error(error);
-
     res.status(500).json({
       message: error.message
     });
@@ -46,11 +56,27 @@ const getuserById = async (req, res) => {
 const createuser = async (req, res) => {
   try {
 
-    const { name, email, role } = req.body;
+    const {
+      name,
+      email,
+      role,
+      phone,
+      department,
+      status,
+      joinDate
+    } = req.body;
 
-    if (!name || !email || !role) {
+    if (
+      !name ||
+      !email ||
+      !role ||
+      !phone ||
+      !department ||
+      !status ||
+      !joinDate
+    ) {
       return res.status(400).json({
-        message: "name, email and role are required"
+        message: "All user fields are required"
       });
     }
 
@@ -62,18 +88,26 @@ const createuser = async (req, res) => {
       });
     }
 
-    const validRoles = ["admin", "guest"];
-
     if (!validRoles.includes(role)) {
       return res.status(400).json({
-        message: "Role must be admin or guest"
+        message: "Role must be admin, manager, member or guest"
       });
+    }
+
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+      message: "Status must be Active or Inactive"
+    });
     }
 
     const result = await userModel.collection().insertOne({
       name,
       email,
-      role
+      role,
+      phone,
+      department,
+      status,
+      joinDate
     });
 
     res.status(201).json({
@@ -99,11 +133,27 @@ const updateuser = async (req, res) => {
       });
     }
 
-    const { name, email, role } = req.body;
+    const {
+      name,
+      email,
+      role,
+      phone,
+      department,
+      status,
+      joinDate
+    } = req.body;
 
-    if (!name || !email || !role) {
+    if (
+      !name ||
+      !email ||
+      !role ||
+      !phone ||
+      !department ||
+      !status ||
+      !joinDate
+    ) {
       return res.status(400).json({
-        message: "name, email and role are required"
+        message: "All user fields are required"
       });
     }
 
@@ -115,11 +165,15 @@ const updateuser = async (req, res) => {
       });
     }
 
-    const validRoles = ["admin", "guest"];
-
     if (!validRoles.includes(role)) {
       return res.status(400).json({
-        message: "Role must be admin or guest"
+        message: "Role must be admin, manager, member or guest"
+      });
+    }
+
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+        message: "Status must be Active or Inactive"
       });
     }
 
@@ -131,7 +185,11 @@ const updateuser = async (req, res) => {
         $set: {
           name,
           email,
-          role
+          role,
+          phone,
+          department,
+          status,
+          joinDate
         }
       }
     );
@@ -155,6 +213,7 @@ const updateuser = async (req, res) => {
 
 const deleteuser = async (req, res) => {
   try {
+
     const id = req.params.id;
 
     if (!userModel.ObjectId.isValid(id)) {

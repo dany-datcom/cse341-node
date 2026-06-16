@@ -1,5 +1,17 @@
 const taskModel = require("../models/task");
 
+const validStatus = [
+  "Not Started",
+  "In Progress",
+  "Completed"
+];
+
+const validPriority = [
+  "Low",
+  "Medium",
+  "High"
+];
+
 const getAlltasks = async (req, res) => {
   try {
     const tasks = await taskModel.collection().find().toArray();
@@ -44,15 +56,51 @@ const gettaskById = async (req, res) => {
 const createtask = async (req, res) => {
   try {
 
-    const { title, description, status } = req.body;
+    const {
+      title,
+      description,
+      status,
+      priority,
+      assignedTo,
+      dueDate,
+      projectId
+    } = req.body;
 
-    if (!title || !description || !status) {
+    if (
+      !title ||
+      !description ||
+      !status ||
+      !priority ||
+      !assignedTo ||
+      !dueDate ||
+      !projectId
+    ) {
       return res.status(400).json({
-        message: "title, description and status are required"
+        message: "All task fields are required"
       });
     }
 
-    const result = await taskModel.collection().insertOne(req.body);
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+        message: "Status must be Not Started, In Progress or Completed"
+      });
+    }
+
+    if (!validPriority.includes(priority)) {
+      return res.status(400).json({
+        message: "Priority must be Low, Medium or High"
+      });
+    }
+
+    const result = await taskModel.collection().insertOne({
+      title,
+      description,
+      status,
+      priority,
+      assignedTo,
+      dueDate,
+      projectId
+    });
 
     res.status(201).json({
       message: "Task created successfully",
@@ -77,12 +125,56 @@ const updatetask = async (req, res) => {
       });
     }
 
+    const {
+      title,
+      description,
+      status,
+      priority,
+      assignedTo,
+      dueDate,
+      projectId
+    } = req.body;
+
+    if (
+      !title ||
+      !description ||
+      !status ||
+      !priority ||
+      !assignedTo ||
+      !dueDate ||
+      !projectId
+    ) {
+      return res.status(400).json({
+        message: "All task fields are required"
+      });
+    }
+
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+        message: "Status must be Not Started, In Progress or Completed"
+      });
+    }
+
+    if (!validPriority.includes(priority)) {
+      return res.status(400).json({
+        message: "Priority must be Low, Medium or High"
+      });
+    }
+
     const result = await taskModel.collection().updateOne(
       {
         _id: new taskModel.ObjectId(id)
       },
       {
-        $set: req.body
+        $set: {
+          title,
+          description,
+          status,
+          priority,
+          assignedTo,
+          dueDate,
+          projectId
+        }
       }
     );
 
