@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "test-secret-key", 
     resave: false,
     saveUninitialized: false
   })
@@ -36,17 +36,30 @@ app.use(
   swaggerUi.setup(swaggerDocument)
 );
 
+
+app.use((err, req, res, next) => {
+  console.error("Error:", err.message);
+  console.error(err.stack);
+  res.status(500).json({ 
+    error: "Internal Server Error",
+    message: err.message 
+  });
+});
+
+
 const startServer = async () => {
   try {
     await connectDB();
-
-    app.listen(process.env.PORT || 8080, () => {
-      console.log("Server Running");
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error(error);
+    console.error("Failed to start server:", error);
+    process.exit(1);
   }
 };
+
 
 if (require.main === module) {
   startServer();

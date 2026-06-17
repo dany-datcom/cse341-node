@@ -116,12 +116,13 @@ const createuser = async (req, res) => {
     });
 
   } catch (error) {
+     console.error("USERS ERROR:", error);
+
     res.status(500).json({
       message: error.message
     });
   }
 };
-
 const updateuser = async (req, res) => {
   try {
 
@@ -205,10 +206,12 @@ const updateuser = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
-  }
+  console.error("USERS ERROR:", error);
+
+  res.status(500).json({
+    message: error.message
+  });
+}
 };
 
 const deleteuser = async (req, res) => {

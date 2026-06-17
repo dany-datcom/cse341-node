@@ -204,10 +204,12 @@ const deleteproject = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
-  }
+  console.error("PROJECTS ERROR:", error);
+
+  res.status(500).json({
+    message: error.message
+  });
+}
 };
 
 module.exports = {
